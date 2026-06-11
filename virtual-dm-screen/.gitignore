@@ -1,0 +1,9 @@
+# Dependencies installed by `npm install` — never commit these.
+node_modules/
+
+# Build output from `npm run build`.
+dist/
+
+# Editor / OS noise.
+.DS_Store
+*.local

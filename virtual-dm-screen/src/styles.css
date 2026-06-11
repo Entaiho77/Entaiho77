@@ -1,0 +1,778 @@
+/* ===========================================================================
+   Virtual DM Screen — stylesheet.
+
+   Design direction (from the brief): modern layout with a pen-and-paper
+   soul. Texture used lightly, typography does the heavy lifting, tactile
+   "stamped" controls, and legibility above all. No fake parchment.
+
+   Structure of this file:
+     1. Design tokens (CSS variables)
+     2. Base / typography
+     3. Layout (header, tabs, main + dice sidebar)
+     4. Shared pieces (panels, buttons, inputs, chips)
+     5. Feature styles (combat, dice, notes, reference, library, settings)
+     6. Responsiveness & accessibility
+   ========================================================================= */
+
+/* ---- 1. Design tokens ------------------------------------------------- */
+:root {
+  /* Paper & ink. Warm off-white paper, near-black ink, an iron-gall blue
+     accent, and a wax-seal red reserved for damage/danger. */
+  --paper: #f4f0e6;
+  --paper-raised: #fbf8f1;
+  --ink: #26221c;
+  --ink-soft: #5c554a;
+  --accent: #34456b;       /* iron-gall ink blue */
+  --accent-soft: #dde2ec;
+  --danger: #8c3041;       /* wax-seal red */
+  --danger-soft: #f0dfe2;
+  --line: #b9b0a0;         /* faded pencil line */
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+
+  /* The "stamped" offset shadow used on panels and pressed controls. */
+  --stamp-shadow: 3px 3px 0 rgba(38, 34, 28, 0.14);
+
+  --radius: 8px;
+}
+
+/* ---- 2. Base / typography --------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  background-color: var(--paper);
+  /* Subtle paper grain: an inline SVG noise layer at very low opacity.
+     It reads as texture, not decoration. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.15;
+}
+
+/* Numbers (HP, initiative, dice) must align and scan instantly. */
+input[type='number'],
+.roll-total,
+.hp-readout,
+.round-badge {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- 3. Layout --------------------------------------------------------- */
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 3rem;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  padding-block: 0.75rem 1rem;
+  /* A hand-inked double rule under the header instead of a plain hairline. */
+  border-bottom: 2px solid var(--ink);
+  box-shadow: 0 4px 0 -2px var(--line);
+  margin-bottom: 1.25rem;
+}
+
+.app-header h1 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.app-header h1 span {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.system-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--paper-raised);
+  background: var(--accent);
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  /* A slight tilt: stamped, not printed. */
+  transform: rotate(-1.5deg);
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.tabs button {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+
+.tabs button:hover {
+  color: var(--ink);
+}
+
+.tabs button.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Main content + dice sidebar. Collapses to one column on small screens. */
+.app-body {
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* ---- 4. Shared pieces --------------------------------------------------- */
+.panel {
+  background: var(--paper-raised);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--stamp-shadow);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.panel-header h2 {
+  font-size: 1.25rem;
+}
+
+.panel-footer {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Buttons: inked and physical. Hover lifts a hair; press "stamps" down. */
+button {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(38, 34, 28, 0.18);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(38, 34, 28, 0.18);
+}
+
+button:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+button.primary {
+  background: var(--ink);
+  color: var(--paper-raised);
+}
+
+button.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button.danger.primary {
+  background: var(--danger);
+  color: var(--paper-raised);
+}
+
+/* Ghost buttons: low-emphasis row actions (move, remove). */
+button.ghost {
+  border-color: transparent;
+  box-shadow: none;
+  background: none;
+  font-weight: 400;
+}
+
+button.ghost:hover {
+  border-color: var(--line);
+  transform: none;
+}
+
+input,
+select,
+textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+}
+
+textarea {
+  width: 100%;
+  min-height: 7rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+label.field,
+.field {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  box-shadow: none;
+}
+
+button.chip:hover {
+  transform: none;
+  background: var(--danger-soft);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.hint {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.empty-hint {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.error-text {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ---- 5a. Combat tab ----------------------------------------------------- */
+.turn-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.round-badge {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding-right: 0.25rem;
+}
+
+.add-combatant {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.add-combatant input {
+  width: 5.5rem;
+}
+
+.add-combatant input:first-child {
+  flex: 1;
+  min-width: 9rem;
+}
+
+.combatant-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.combatant {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  background: var(--paper-raised);
+}
+
+/* The active combatant gets a heavy inked left edge and a faint wash. */
+.combatant.active {
+  border-color: var(--ink);
+  border-left: 6px solid var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Downed combatants fade and get struck through — readable at a glance. */
+.combatant.down .combatant-name {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.combatant-main {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.init-input {
+  width: 3.2rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.combatant-name {
+  font-size: 1.05rem;
+  flex: 1;
+  min-width: 7rem;
+}
+
+.hp-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hp-amount {
+  width: 3.2rem;
+  text-align: center;
+}
+
+.hp-readout {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5rem;
+  text-align: right;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.condition-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+
+.condition-input {
+  border: none;
+  border-bottom: 1.5px dashed var(--line);
+  border-radius: 0;
+  background: none;
+  width: 8rem;
+  font-size: 0.85rem;
+}
+
+/* ---- 5b. Dice roller ----------------------------------------------------- */
+.dice-roller .dice-options {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.dice-options label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dice-options input {
+  width: 4.2rem;
+}
+
+.dice-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.die-button {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.05rem;
+  min-width: 3.4rem;
+  padding: 0.55rem 0.5rem;
+}
+
+.roll-result {
+  margin-top: 1rem;
+  text-align: center;
+  animation: roll-pop 220ms ease-out;
+}
+
+.roll-total {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.roll-breakdown {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+@keyframes roll-pop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.roll-history {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.roll-history ol {
+  margin: 0.5rem 0;
+  padding-left: 1.2rem;
+}
+
+.roll-history span {
+  color: var(--ink-soft);
+}
+
+/* ---- 5c. Notes ----------------------------------------------------------- */
+.scratchpad {
+  min-height: 9rem;
+  font-size: 1rem;
+}
+
+.notes-split {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1rem;
+}
+
+.note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  font-weight: 400;
+  box-shadow: none;
+  border-color: var(--line);
+}
+
+.note-item.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.note-date {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.note-editor input {
+  width: 100%;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.note-editor textarea {
+  min-height: 14rem;
+}
+
+/* ---- 5d. Reference -------------------------------------------------------- */
+.reference-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.reference-toolbar input {
+  flex: 1;
+}
+
+.reference-grid {
+  columns: 2 22rem; /* simple masonry: panels flow into columns */
+  column-gap: 1.25rem;
+}
+
+.reference-grid .panel {
+  break-inside: avoid;
+}
+
+.reference-grid summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.reference-grid summary::before {
+  content: '▸';
+  color: var(--accent);
+}
+
+.reference-grid details[open] summary::before {
+  content: '▾';
+}
+
+.reference-grid h3 {
+  font-size: 1.05rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 0.6rem;
+}
+
+th {
+  font-family: var(--font-display);
+  text-align: left;
+  border-bottom: 2px solid var(--ink);
+  padding: 0.25rem 0.4rem;
+}
+
+td {
+  border-bottom: 1px dashed var(--line);
+  padding: 0.3rem 0.4rem;
+  vertical-align: top;
+}
+
+.panel-title-input {
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: none;
+  border-bottom: 1.5px dashed var(--line);
+  border-radius: 0;
+  background: none;
+  margin-bottom: 0.5rem;
+}
+
+/* ---- 5e. Library ----------------------------------------------------------- */
+.subtabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.subtabs button.active {
+  background: var(--ink);
+  color: var(--paper-raised);
+}
+
+.library-split {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1fr) 2fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.library-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.stat-grid {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  margin: 0 0 0.75rem;
+}
+
+.stat-grid legend {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding-inline: 0.3rem;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  gap: 0.2rem;
+}
+
+.stat-box input {
+  width: 4.2rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---- 5f. Settings ------------------------------------------------------------ */
+.settings-layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.system-editor {
+  border-top: 1.5px dashed var(--line);
+  padding-top: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.system-editor summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.system-editor h3 {
+  font-size: 1rem;
+  display: inline;
+}
+
+.field-list {
+  list-style: none;
+  margin: 0.4rem 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.field-list li {
+  display: flex;
+  align-items: center;
+}
+
+/* ---- 6. Responsiveness & accessibility -------------------------------------- */
+@media (max-width: 900px) {
+  .app-body,
+  .settings-layout,
+  .library-split,
+  .notes-split {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-grid {
+    columns: 1;
+  }
+
+  .tabs {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Keyboard focus must always be visible (brief requirement). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Respect users who prefer less motion: kill transitions/animations. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

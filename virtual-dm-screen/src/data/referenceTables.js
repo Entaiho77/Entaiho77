@@ -1,9 +1,12 @@
 // ---------------------------------------------------------------------------
-// Built-in reference tables, pre-loaded for D&D 5e.
+// Built-in reference tables.
 //
-// Content is summarized from the D&D 5e System Reference Document (SRD),
-// which Wizards of the Coast publishes under a free license for exactly
-// this kind of use.
+// Two sources, shown as a label on each panel:
+//   - '5e SRD': summarized from the D&D 5e System Reference Document,
+//     which Wizards of the Coast publishes under a free license for
+//     exactly this kind of use.
+//   - 'Solryn': the DM's homebrew system, taken from the Solryn Master
+//     Reference Document v1.2 (the authoritative rules source).
 //
 // These are intentionally kept in code (not in the DM's saved data):
 // they're read-only "rulebook pages". The DM adds their own editable
@@ -15,6 +18,7 @@ export const builtinTables = [
   {
     id: 'conditions',
     title: 'Conditions',
+    source: '5e SRD',
     columns: ['Condition', 'Effect (summary)'],
     rows: [
       ['Blinded', "Can't see; auto-fails sight checks. Attacks against it have advantage; its attacks have disadvantage."],
@@ -36,6 +40,7 @@ export const builtinTables = [
   {
     id: 'actions-in-combat',
     title: 'Actions in Combat',
+    source: '5e SRD',
     columns: ['Action', 'What it does'],
     rows: [
       ['Attack', 'Make one melee or ranged attack (more with Extra Attack).'],
@@ -53,6 +58,7 @@ export const builtinTables = [
   {
     id: 'cover',
     title: 'Cover',
+    source: '5e SRD',
     columns: ['Cover', 'Benefit'],
     rows: [
       ['Half cover', '+2 bonus to AC and DEX saving throws.'],
@@ -63,6 +69,7 @@ export const builtinTables = [
   {
     id: 'exhaustion',
     title: 'Exhaustion',
+    source: '5e SRD',
     columns: ['Level', 'Effect (cumulative)'],
     rows: [
       ['1', 'Disadvantage on ability checks.'],
@@ -76,6 +83,7 @@ export const builtinTables = [
   {
     id: 'typical-dcs',
     title: 'Typical Difficulty Classes',
+    source: '5e SRD',
     columns: ['Task difficulty', 'DC'],
     rows: [
       ['Very easy', '5'],
@@ -89,6 +97,7 @@ export const builtinTables = [
   {
     id: 'skills',
     title: 'Skills by Ability',
+    source: '5e SRD',
     columns: ['Ability', 'Skills'],
     rows: [
       ['Strength', 'Athletics'],
@@ -101,12 +110,216 @@ export const builtinTables = [
   {
     id: 'light-vision',
     title: 'Light & Obscurement',
+    source: '5e SRD',
     columns: ['Situation', 'Effect'],
     rows: [
       ['Lightly obscured (dim light, patchy fog)', 'Disadvantage on Wisdom (Perception) checks relying on sight.'],
       ['Heavily obscured (darkness, opaque fog)', 'Effectively blinded when looking into the area.'],
       ['Dim light', 'Lightly obscures the area.'],
       ['Darkness', 'Heavily obscures the area.'],
+    ],
+  },
+
+  // ---- Solryn (Master Reference Document v1.2) -----------------------------
+  {
+    id: 'solryn-core',
+    title: 'Core Rules',
+    source: 'Solryn',
+    columns: ['Rule', 'How it works'],
+    rows: [
+      ['All attacks hit', "No attack rolls — attacks automatically hit. Roll damage against the target's DR instead."],
+      ['Damage resolution', 'Roll damage + modifiers + skill bonus. If damage > DR, the difference is HP loss; if ≤ DR, no damage.'],
+      ['Skill check', 'd20 + ability modifier + skill training bonus vs DC.'],
+      ['Saving throw', 'd20 + ability modifier vs DC. Success reduces or negates the effect.'],
+      ['Advantage / Disadvantage', 'Roll 2d20; take the higher (advantage) or lower (disadvantage).'],
+      ['Modifier', '+1 per 3 points: score 1–3 → +0, 4–6 → +1, 7–9 → +2, 10–12 → +3, and so on.'],
+      ['Stat generation', 'Roll 2d4 per stat, in order (no rearranging); racial bonuses add on top.'],
+      ['Initiative', 'd20 + NIM modifier. Ties: higher base NIM score wins; players beat monsters; otherwise reroll.'],
+      ['Starting skills', '3 base + 3 weapon + 1 crafting, all at Novice (+1). No repeats within a category.'],
+    ],
+  },
+  {
+    id: 'solryn-derived',
+    title: 'Derived Stats',
+    source: 'Solryn',
+    columns: ['Stat', 'Formula'],
+    rows: [
+      ['Hit Points', 'END score + END mod. Fully recalculated from new END at each level-up.'],
+      ['Damage Reduction (DR)', 'Armor DR (+ shield) + NIM mod + END mod.'],
+      ['Movement', '10 + (STR mod + END mod) × 5 ft, max 50 ft. Medium armor −5 ft, heavy −10 ft.'],
+      ['Carry', 'STR score × 15 lb.'],
+      ['Arcana Points (AP)', 'ARC mod × 2. Spend at most your level in AP per turn. Short rest: recover half; long rest: all.'],
+      ['Luck Points', 'LCK mod. Reroll any die, force an enemy reroll, or attempt a critical hit. All recover daily.'],
+      ['Spells known', '(ARC mod × 2) + level. Elves add 3 starting non-damaging spells.'],
+    ],
+  },
+  {
+    id: 'solryn-combat',
+    title: 'Turn Structure & Tactics',
+    source: 'Solryn',
+    columns: ['Element', 'Rule'],
+    rows: [
+      ['Movement', 'Move up to your speed.'],
+      ['Attack OR Action', 'One per turn, not both: any harmful action, or a non-combat action (use item, help…).'],
+      ['Bonus action', 'Quick speech or a bonus-action spell.'],
+      ['Reaction', 'Opportunity attacks and reactive spells, when triggered.'],
+      ['Free action', 'Drop an item, drink a prepared potion.'],
+      ['Flanking', 'Advantage when you and an ally are on opposite sides of an enemy.'],
+      ['Cover', 'Half cover +2 DR · three-quarters +5 DR · full cover cannot be targeted.'],
+      ['Grappling', 'Contest: your Athletics vs their Athletics or Acrobatics. Success: their speed becomes 0.'],
+      ['Shoving', 'Same contest. Success: push 5 ft or knock prone (prone: disadvantage on attacks, melee attackers gain advantage).'],
+      ['At 0 HP', 'Unconscious; roll d20 each turn — 10+ is a success. 3 successes stabilize at 1 HP; 3 failures = permanent death.'],
+    ],
+  },
+  {
+    id: 'solryn-crits',
+    title: 'Critical Hits (Luck)',
+    source: 'Solryn',
+    columns: ['Your LCK modifier', 'Crit succeeds on d20'],
+    rows: [
+      ['+1', '19–20'],
+      ['+2', '18–20'],
+      ['+3', '17–20'],
+      ['+4', '16–20'],
+      ['+5', '15–20'],
+      ['+6', '14–20'],
+      ['Cost & effect', "Spend 1 Luck Point, roll d20. On success: target's DR is ignored and your damage is doubled."],
+    ],
+  },
+  {
+    id: 'solryn-armor',
+    title: 'Armor & Shields',
+    source: 'Solryn',
+    columns: ['Item', 'DR', 'Notes'],
+    rows: [
+      ['Padded Cloth', '2', 'Light · no penalty · 5 gp'],
+      ['Leather', '2', 'Light · no penalty · 10 gp'],
+      ['Studded Leather', '3', 'Light · no penalty · 25 gp'],
+      ['Hide', '3', 'Light · no penalty · 15 gp'],
+      ['Chain Shirt', '4', 'Medium · −5 ft speed · 50 gp'],
+      ['Scale Mail', '4', 'Medium · −5 ft speed · 50 gp'],
+      ['Breastplate', '5', 'Medium · −5 ft speed · 400 gp'],
+      ['Half Plate', '5', 'Medium · −5 ft speed · 750 gp'],
+      ['Ring Mail', '6', 'Heavy · −10 ft speed · 30 gp'],
+      ['Chain Mail', '6', 'Heavy · −10 ft speed · 75 gp'],
+      ['Splint Mail', '7', 'Heavy · −10 ft speed · 200 gp'],
+      ['Plate Mail', '8', 'Heavy · −10 ft speed · 1,500 gp'],
+      ['Buckler', '+1', 'Shield · 5 gp'],
+      ['Shield', '+2', 'Shield · 10 gp'],
+      ['Tower Shield', '+3', 'Shield · disadvantage on attacks · 25 gp'],
+    ],
+  },
+  {
+    id: 'solryn-races',
+    title: 'Races',
+    source: 'Solryn',
+    columns: ['Race', 'Stat bonuses', 'Advantages', 'Weakness'],
+    rows: [
+      ['Human', '+1 to any two stats', 'Learn trades faster (downtime −1 week)', 'Vulnerable to disease'],
+      ['Dwarf', '+2 STR, +1 any', 'Stone Sight · Magic Resistance (adv. vs magic) · Crafting −2 DC', 'Cannot be healed magically'],
+      ['Elf', '+1 NIM, +1 WIS or ARC', '3 bonus non-damaging spells · Nature-Smithing (−2 crafting DC)', 'Vulnerable to poison'],
+      ['Gnome', '+1 NIM, +1 WIS', 'Master of Toolcraft · Immune to spatial disorientation', 'Can only carry 25% of body weight'],
+      ['Drakari', '+2 ARC, +1 STR', 'Breath weapon (1/day, choose type) · Resistance to chosen type', 'Disadvantage on divine Charisma checks'],
+      ['Umbrin', '+2 NIM, +1 WIS', 'Shadow movement · Darksight', 'Disadvantage on checks in bright light'],
+      ['Marai', '+2 END, +1 INT', 'Breathe/swim underwater · Echo pulse (detect hidden within 60 ft)', 'Must submerge every 48 h or fatigued'],
+      ['Ashborn', '+2 STR, +1 ARC', 'Auto-stabilize at 0 HP 1/day · +1 fire damage on melee', 'Vulnerable to cold'],
+      ['Etherials', '+2 ARC, +1 INT', 'Teleport 10 ft as reaction 1/rest · Advantage vs mental effects', 'Vulnerable to radiant'],
+    ],
+  },
+  {
+    id: 'solryn-leveling',
+    title: 'XP & Leveling',
+    source: 'Solryn',
+    columns: ['Level', 'XP to advance', 'Roll per stat at new level'],
+    rows: [
+      ['1 → 2', '100', '1d4 to each of the 7 stats'],
+      ['2 → 3', '250', '1d4'],
+      ['3 → 4', '400', '1d4'],
+      ['4 → 5', '600', '1d4'],
+      ['5 → 6', '900', '2d6 (milestone!)'],
+      ['6 → 7', '1,200', '1d4'],
+      ['7 → 8', '1,600', '1d4'],
+      ['8 → 9', '2,000', '1d4'],
+      ['9 → 10', '2,500', '2d6 (milestone!)'],
+      ['10 → 11', '3,200', '1d4 (milestones at 14, 18; 1d8 at 20+)'],
+      ['Every level', '—', '+2 skill points. Order: roll stats → recalculate ALL derived values → allocate skills.'],
+    ],
+  },
+  {
+    id: 'solryn-skill-ranks',
+    title: 'Skill Ranks',
+    source: 'Solryn',
+    columns: ['Rank', 'Points', 'Bonus'],
+    rows: [
+      ['Novice', '1–3', '+1'],
+      ['Journeyman', '4–6', '+2'],
+      ['Master', '7–9', '+3'],
+      ['Training', '2 skill points per level', 'Downtime training: 1 month per point (racial bonuses can reduce)'],
+      ['Action-economy skills', '3 points each, level 2+', 'Extra Attack, Quick Reflexes, Fleet of Foot, Swift Casting, etc.'],
+    ],
+  },
+  {
+    id: 'solryn-dcs',
+    title: 'Common DCs',
+    source: 'Solryn',
+    columns: ['Difficulty', 'DC'],
+    rows: [
+      ['Very easy', '5'],
+      ['Easy', '8–10'],
+      ['Moderate', '12–14'],
+      ['Hard', '15–17'],
+      ['Very hard', '18–20'],
+      ['Nearly impossible', '22–25'],
+    ],
+  },
+  {
+    id: 'solryn-rest',
+    title: 'Rest & Recovery',
+    source: 'Solryn',
+    columns: ['Rest', 'Duration', 'Recovers'],
+    rows: [
+      ['Short rest', '1 hour', 'Half Arcana Points (rounded down)'],
+      ['Long rest (field)', '8 hours', 'Half HP, all Arcana Points, all Luck Points'],
+      ['Long rest (town)', '8 hours', 'Full HP, all Arcana Points, all Luck Points'],
+    ],
+  },
+  {
+    id: 'solryn-magic',
+    title: 'Magic Basics',
+    source: 'Solryn',
+    columns: ['Rule', 'Detail'],
+    rows: [
+      ['Base spell', '1d4 damage · touch or 20 ft range · costs 0 AP · damage spells auto-hit (damage vs DR).'],
+      ['Spell save DC', '10 + ARC modifier + skill training bonus. Success: half damage (then DR); failure: full damage vs DR.'],
+      ['AP per turn', 'You can spend Arcana Points per turn up to your level.'],
+      ['No divine magic', 'The gods sacrificed themselves — divine magic does not exist in Solryn.'],
+    ],
+  },
+  {
+    id: 'solryn-spell-mods',
+    title: 'Spell Modifications',
+    source: 'Solryn',
+    columns: ['Modification', 'AP cost', 'Effect'],
+    rows: [
+      ['Amplify Power', '1', '+1d4 damage'],
+      ['Multi-Target Cast', '1 per target', 'Affect 1 additional target'],
+      ['Extended Range', '1', '+5 feet range'],
+      ['Lingering Effect', '1', 'Add a 1-turn duration effect'],
+      ['Spell Disruption', '1', 'Nullify a magical effect for 1 round'],
+      ['Arcane Shielding', '1', 'Magic resistance for 1 round'],
+    ],
+  },
+  {
+    id: 'solryn-potions',
+    title: 'Healing Potions',
+    source: 'Solryn',
+    columns: ['Potion', 'Healing', 'Price'],
+    rows: [
+      ['Minor', '1d4+1', '50 gp'],
+      ['Standard', '2d4+2', '100 gp'],
+      ['Greater', '2d4+4', '150 gp'],
+      ['Superior', '3d4+6', '500 gp'],
+      ['Bonuses', 'Add crafter bonus (+1/+2/+3 by Alchemist rank); add Medicine mod if administered by a skilled healer.', '—'],
     ],
   },
 ];

@@ -95,7 +95,7 @@ export default function ReferencePanels() {
             <details open={q !== ''}>
               <summary>
                 <h3>{t.title}</h3>
-                <span className="hint">5e SRD</span>
+                <span className="hint">{t.source}</span>
               </summary>
               <table>
                 <thead>

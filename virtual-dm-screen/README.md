@@ -60,11 +60,15 @@ Supabase, that file changes and the components mostly don't.
 - **Data lives in the browser.** Clearing site data wipes it. Use
   *Settings → Export data* regularly; the file is your backup and will
   remain the import format in later phases.
-- **Solryn preset.** Uses the same d20 dice and the same conditions as
-  5e (per the DM), with seven attributes: STR, NIM, END, WIS, INT, ARC,
-  LCK. Stat block fields beyond the attributes are still pending the
-  DM's character sheet — add them in the Settings tab or in
-  `src/data/systems.js`.
+- **Solryn preset.** Built from the Solryn Master Reference Document
+  v1.2. Same dice and conditions as 5e; creature stat fields mirror the
+  master doc's stat block (DR, Speed, Damage, AP, Soul Core) plus the
+  seven attributes (STR, NIM, END, WIS, INT, ARC, LCK). Solryn rules
+  tables (core rules, derived stats, combat, crits, armor, races,
+  leveling, magic…) are pre-loaded in the Reference tab, and the
+  Library tab has an "Add Solryn bestiary" button that loads the 10
+  statted creatures from the master doc. When the master doc changes,
+  update `src/data/referenceTables.js` and `src/data/solrynBestiary.js`.
 - **Editing the built-in 5e tables** means editing
   `src/data/referenceTables.js` — they're code, not saved data, so they
   can't be lost or corrupted by a bad import.

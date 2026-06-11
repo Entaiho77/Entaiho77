@@ -50,16 +50,25 @@ export function defaultSystems() {
     },
     {
       // ----------------------------------------------------------------
-      // Solryn — the DM's homebrew system.
-      // Per the DM: it uses the same d20 dice and the same conditions
-      // as D&D 5e, with its own seven attributes. Stat block fields
-      // beyond the attributes (defense, speed, etc.) are still pending
-      // the DM's character sheet — add them here or in Settings.
+      // Solryn — the DM's homebrew system, per the Solryn Master
+      // Reference Document v1.2. Same dice and conditions as 5e.
+      // Key mechanics (full rules live in the Reference tab):
+      //   - No attack rolls: attacks auto-hit; damage is rolled vs DR.
+      //   - Modifier: +1 per 3 points (1–3 → +0, 4–6 → +1, …).
+      //   - HP = END + END mod; DR = armor + NIM mod + END mod.
+      // The stat fields mirror the master doc's creature stat block
+      // (HP, DR, Speed, Damage, Soul Core) plus the seven abilities;
+      // long "Special" text belongs in the creature's notes.
       // ----------------------------------------------------------------
       id: 'solryn',
       name: 'Solryn',
       dice: [4, 6, 8, 10, 12, 20, 100],
       statFields: [
+        { key: 'dr', label: 'DR' },
+        { key: 'speed', label: 'Speed' },
+        { key: 'damage', label: 'Damage' },
+        { key: 'ap', label: 'AP' },
+        { key: 'soulcore', label: 'Soul Core' },
         { key: 'str', label: 'STR' },
         { key: 'nim', label: 'NIM' },
         { key: 'end', label: 'END' },

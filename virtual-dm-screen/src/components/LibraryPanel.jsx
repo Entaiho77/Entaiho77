@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { useAppState, makeId } from '../state/AppState.jsx';
+import { solrynBestiary } from '../data/solrynBestiary.js';
 
 // The three collections, with labels for the sub-tab buttons.
 const KINDS = [
@@ -64,6 +65,26 @@ export default function LibraryPanel() {
     if (editingId === id) setEditingId(null);
   }
 
+  // Copy the Solryn starter bestiary (10 creatures from the master doc)
+  // into the saved creature library. Skips names that already exist, so
+  // pressing it twice doesn't create duplicates.
+  function loadSolrynBestiary() {
+    update((draft) => {
+      const existing = new Set(draft.library.creatures.map((c) => c.name));
+      solrynBestiary.forEach((b) => {
+        if (existing.has(b.name)) return;
+        draft.library.creatures.push({
+          id: makeId(),
+          name: b.name,
+          systemId: 'solryn',
+          maxHp: b.maxHp,
+          stats: { ...b.stats },
+          notes: b.notes,
+        });
+      });
+    });
+  }
+
   // Drop a creature/character straight into the initiative tracker.
   function sendToCombat(entry) {
     update((draft) => {
@@ -109,9 +130,16 @@ export default function LibraryPanel() {
         <section className="panel" aria-label={`${kind.label} list`}>
           <div className="panel-header">
             <h2>{kind.label}</h2>
-            <button type="button" className="primary" onClick={newEntry}>
-              + New
-            </button>
+            <div className="button-row">
+              {kindKey === 'creatures' && (
+                <button type="button" onClick={loadSolrynBestiary}>
+                  Add Solryn bestiary
+                </button>
+              )}
+              <button type="button" className="primary" onClick={newEntry}>
+                + New
+              </button>
+            </div>
           </div>
 
           {entries.length === 0 ? (

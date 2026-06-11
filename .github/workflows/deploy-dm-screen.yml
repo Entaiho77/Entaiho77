@@ -1,0 +1,71 @@
+# Builds the Virtual DM Screen and publishes it to GitHub Pages.
+#
+# Runs automatically whenever app code is pushed to the branches below,
+# so the live site always matches the latest code. It can also be run
+# by hand from the repo's Actions tab ("workflow_dispatch").
+#
+# The site is served at https://entaiho77.github.io/Entaiho77/
+# (the --base flag below must match that trailing path).
+
+name: Deploy DM Screen to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - claude/affectionate-edison-rf8h4f
+    paths:
+      - 'virtual-dm-screen/**'
+      - '.github/workflows/deploy-dm-screen.yml'
+  workflow_dispatch:
+
+# The deploy step needs these; everything else stays read-only.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: virtual-dm-screen/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: virtual-dm-screen
+
+      - name: Build the app
+        run: npm run build -- --base=/Entaiho77/
+        working-directory: virtual-dm-screen
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Enables Pages on the repo the first time this runs.
+          enablement: true
+
+      - name: Upload the built site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: virtual-dm-screen/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

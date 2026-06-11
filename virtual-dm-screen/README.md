@@ -60,10 +60,11 @@ Supabase, that file changes and the components mostly don't.
 - **Data lives in the browser.** Clearing site data wipes it. Use
   *Settings → Export data* regularly; the file is your backup and will
   remain the import format in later phases.
-- **Solryn is a placeholder.** The seven attributes (STR, NIM, END, WIS,
-  INT, ARC, LCK) are from the brief; the dice and condition lists are
-  stand-ins. Fill in the real mechanics in the Settings tab, or edit the
-  preset in `src/data/systems.js`.
+- **Solryn preset.** Uses the same d20 dice and the same conditions as
+  5e (per the DM), with seven attributes: STR, NIM, END, WIS, INT, ARC,
+  LCK. Stat block fields beyond the attributes are still pending the
+  DM's character sheet — add them in the Settings tab or in
+  `src/data/systems.js`.
 - **Editing the built-in 5e tables** means editing
   `src/data/referenceTables.js` — they're code, not saved data, so they
   can't be lost or corrupted by a bad import.

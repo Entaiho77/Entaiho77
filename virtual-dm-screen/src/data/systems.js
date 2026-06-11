@@ -50,15 +50,15 @@ export function defaultSystems() {
     },
     {
       // ----------------------------------------------------------------
-      // PLACEHOLDER PRESET — Solryn is the DM's homebrew system.
-      // The seven attributes below were specified in the project brief.
-      // The dice list and condition list are stand-ins until the DM
-      // supplies Solryn's real mechanics; edit them here or directly in
-      // the app's Settings tab.
+      // Solryn — the DM's homebrew system.
+      // Per the DM: it uses the same d20 dice and the same conditions
+      // as D&D 5e, with its own seven attributes. Stat block fields
+      // beyond the attributes (defense, speed, etc.) are still pending
+      // the DM's character sheet — add them here or in Settings.
       // ----------------------------------------------------------------
       id: 'solryn',
       name: 'Solryn',
-      dice: [4, 6, 8, 10, 12, 20],
+      dice: [4, 6, 8, 10, 12, 20, 100],
       statFields: [
         { key: 'str', label: 'STR' },
         { key: 'nim', label: 'NIM' },
@@ -68,7 +68,23 @@ export function defaultSystems() {
         { key: 'arc', label: 'ARC' },
         { key: 'lck', label: 'LCK' },
       ],
-      conditions: [],
+      conditions: [
+        'Blinded',
+        'Charmed',
+        'Deafened',
+        'Frightened',
+        'Grappled',
+        'Incapacitated',
+        'Invisible',
+        'Paralyzed',
+        'Petrified',
+        'Poisoned',
+        'Prone',
+        'Restrained',
+        'Stunned',
+        'Unconscious',
+        'Exhaustion',
+      ],
     },
   ];
 }

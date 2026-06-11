@@ -1,5 +1,9 @@
 # Virtual DM Screen
 
+**Live site:** https://entaiho77.github.io/Entaiho77/ — deployed
+automatically by GitHub Actions on every push (see
+`.github/workflows/deploy-dm-screen.yml`).
+
 A browser-based Dungeon Master screen for remote tabletop sessions. This is
 **Phase 1** of the three-phase plan in the project brief: a complete,
 local-only DM toolkit. No login, no cloud, no player view yet — those are
